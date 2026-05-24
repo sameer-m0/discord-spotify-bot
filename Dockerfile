@@ -16,6 +16,7 @@ COPY --from=node-builder /app/node_modules ./node_modules
 # Copy compiled go-librespot binary directly from the repo context
 ARG TARGETARCH
 COPY go-librespot_${TARGETARCH} ./go-librespot
+RUN chmod +x ./go-librespot
 
 # Copy project source files
 COPY src ./src
