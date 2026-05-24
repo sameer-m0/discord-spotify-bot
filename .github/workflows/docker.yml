@@ -32,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: sameermahindrakar/discord-spotify-bot
+          images: sameer0m/discord-spotify-bot
           tags: |
             type=raw,value=latest
             type=sha
