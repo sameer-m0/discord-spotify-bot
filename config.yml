@@ -1,0 +1,15 @@
+device_name: "Discord Bot"
+device_type: "speaker"
+
+audio_backend: "pipe"
+audio_output_pipe: "./spotify.fifo"
+
+credentials:
+  type: "interactive"
+
+log_level: "info"
+
+server:
+  enabled: true
+  port: 3678
+  allow_origin: "*"

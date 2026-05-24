@@ -1,0 +1,82 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "discord music",
+      "intents": [
+        {
+          "name": "PlayMusic",
+          "samples": [
+            "play music",
+            "play",
+            "resume",
+            "resume music",
+            "start music",
+            "unpause"
+          ]
+        },
+        {
+          "name": "PauseMusic",
+          "samples": [
+            "pause",
+            "pause music",
+            "stop music",
+            "hold on"
+          ]
+        },
+        {
+          "name": "SkipSong",
+          "samples": [
+            "skip",
+            "next song",
+            "next track",
+            "skip this song",
+            "play the next song"
+          ]
+        },
+        {
+          "name": "PrevSong",
+          "samples": [
+            "previous",
+            "go back",
+            "previous song",
+            "last song",
+            "play that again"
+          ]
+        },
+        {
+          "name": "VolumeUp",
+          "samples": [
+            "volume up",
+            "louder",
+            "turn it up",
+            "increase volume"
+          ]
+        },
+        {
+          "name": "VolumeDown",
+          "samples": [
+            "volume down",
+            "quieter",
+            "turn it down",
+            "lower volume"
+          ]
+        },
+        {
+          "name": "WhatIsPlaying",
+          "samples": [
+            "what's playing",
+            "what song is this",
+            "what's this song",
+            "who is this"
+          ]
+        },
+        { "name": "AMAZON.StopIntent",     "samples": [] },
+        { "name": "AMAZON.CancelIntent",   "samples": [] },
+        { "name": "AMAZON.PauseIntent",    "samples": [] },
+        { "name": "AMAZON.NextIntent",     "samples": [] },
+        { "name": "AMAZON.PreviousIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent",     "samples": [] }
+      ]
+    }
+  }
+}

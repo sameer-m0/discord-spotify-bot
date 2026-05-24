@@ -1,0 +1,25 @@
+[Unit]
+Description=Discord Spotify Bot
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=discord
+WorkingDirectory=/opt/discord-spotify-bot
+ExecStart=/usr/bin/node src/index.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+EnvironmentFile=/opt/discord-spotify-bot/.env
+
+[Install]
+WantedBy=multi-user.target
+
+# Setup steps:
+#   sudo cp discord-spotify-bot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable discord-spotify-bot
+#   sudo systemctl start discord-spotify-bot
+#   sudo journalctl -u discord-spotify-bot -f

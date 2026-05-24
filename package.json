@@ -1,0 +1,24 @@
+{
+  "name": "discord-spotify-bot",
+  "version": "1.0.0",
+  "description": "Self-hosted Discord music bot with real Spotify audio via go-librespot",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.10.0",
+    "@discordjs/voice": "^0.19.2",
+    "@snazzah/davey": "^0.1.11",
+    "discord.js": "^14.15.0",
+    "dotenv": "^16.4.0",
+    "eventsource": "^2.0.2",
+    "express": "^4.19.0",
+    "ffmpeg-static": "^5.2.0",
+    "libsodium-wrappers": "^0.8.4",
+    "sodium-native": "^5.1.0",
+    "ws": "^8.16.0"
+  }
+}
