@@ -14,6 +14,7 @@ import {
   entersState,
   joinVoiceChannel,
   NoSubscriberBehavior,
+  StreamType,
 } from '@discordjs/voice';
 import ffmpegPath               from 'ffmpeg-static';
 import { subscribeEvents }      from './librespot.js';
@@ -246,7 +247,9 @@ function startAudioPipeline() {
     behaviors: { noSubscriber: NoSubscriberBehavior.Play },
   });
 
-  const resource = createAudioResource(ffmpegProcess.stdout);
+  const resource = createAudioResource(ffmpegProcess.stdout, {
+    inputType: StreamType.OggOpus,
+  });
   discordPlayer.play(resource);
   voiceConnection.subscribe(discordPlayer);
 
