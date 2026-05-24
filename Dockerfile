@@ -1,18 +1,11 @@
-# --- Stage 1: Build go-librespot ---
-FROM golang:1.22-alpine AS go-builder
-RUN apk add --no-cache git
-WORKDIR /src
-RUN git clone https://github.com/devgianlu/go-librespot.git .
-RUN go build -o go-librespot ./cmd/go-librespot
-
-# --- Stage 2: Install and compile native Node.js dependencies ---
+# --- Stage 1: Install and compile native Node.js dependencies ---
 FROM node:22-bookworm-slim AS node-builder
 RUN apt-get update && apt-get install -y python3 make g++ gcc libtool autoconf automake
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# --- Stage 3: Runtime image ---
+# --- Stage 2: Runtime image ---
 FROM node:22-bookworm-slim
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
@@ -20,8 +13,8 @@ WORKDIR /app
 # Copy built node_modules
 COPY --from=node-builder /app/node_modules ./node_modules
 
-# Copy compiled go-librespot binary
-COPY --from=go-builder /src/go-librespot ./go-librespot
+# Copy compiled go-librespot binary directly from the repo context
+COPY go-librespot ./go-librespot
 
 # Copy project source files
 COPY src ./src
@@ -40,3 +33,4 @@ RUN mkdir -p /app/data
 EXPOSE 3679 3678
 
 CMD ["npm", "start"]
+
