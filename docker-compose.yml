@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  discord-spotify-bot:
+    build: .
+    container_name: discord-spotify-bot
+    restart: unless-stopped
+    ports:
+      - "3679:3679" # Alexa webhook port (forwarded if needed)
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - GUILD_ID=${GUILD_ID}
+      - LIBRESPOT_PATH=./go-librespot
+      - LIBRESPOT_CONFIG_DIR=/app/data
+      - LIBRESPOT_API=http://localhost:3678
+      - ALEXA_WEBHOOK_PORT=3679
+      - ALEXA_SECRET=${ALEXA_SECRET}
+    volumes:
+      - ./data:/app/data

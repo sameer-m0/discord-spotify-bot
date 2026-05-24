@@ -69,6 +69,23 @@ function stopDraining() {
 export function startLibrespot() {
   if (librespotProcess) return;
 
+  // Prepare config directory if custom path is set
+  const configDir = process.env.LIBRESPOT_CONFIG_DIR || '.';
+  if (configDir !== '.') {
+    try {
+      if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+      }
+      const targetConfig = `${configDir}/config.yml`.replace(/\\/g, '/');
+      if (!fs.existsSync(targetConfig)) {
+        fs.copyFileSync('./config.yml', targetConfig);
+        console.log(`[player] Copied default config.yml to ${targetConfig}`);
+      }
+    } catch (err) {
+      console.error('[player] Failed to prepare config directory:', err.message);
+    }
+  }
+
   // Ensure FIFO exists
   try {
     if (!fs.existsSync('./spotify.fifo')) {
