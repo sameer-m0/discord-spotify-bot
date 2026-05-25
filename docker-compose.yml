@@ -16,5 +16,8 @@ services:
       - LIBRESPOT_API=http://localhost:3678
       - ALEXA_WEBHOOK_PORT=3679
       - ALEXA_SECRET=${ALEXA_SECRET}
+      - SPOTIFY_USERNAME=${SPOTIFY_USERNAME}
+      - SPOTIFY_CREDENTIALS_DATA=${SPOTIFY_CREDENTIALS_DATA}
+      - SPOTIFY_DEVICE_ID=${SPOTIFY_DEVICE_ID}
     volumes:
       - ./data:/app/data

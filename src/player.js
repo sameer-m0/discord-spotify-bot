@@ -6,6 +6,7 @@
 
 import { spawn, execSync }      from 'child_process';
 import fs                       from 'fs';
+import crypto                   from 'crypto';
 import {
   createAudioPlayer,
   createAudioResource,
@@ -83,6 +84,44 @@ export function startLibrespot() {
       }
     } catch (err) {
       console.error('[player] Failed to prepare config directory:', err.message);
+    }
+  }
+
+  // Handle environment-based credentials
+  const spotifyUsername = process.env.SPOTIFY_USERNAME;
+  const spotifyCredsData = process.env.SPOTIFY_CREDENTIALS_DATA;
+  if (spotifyUsername && spotifyCredsData) {
+    try {
+      const statePath = `${configDir}/state.json`.replace(/\\/g, '/');
+      let existingState = {};
+      if (fs.existsSync(statePath)) {
+        try {
+          existingState = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+        } catch {
+          // ignore corrupted/invalid existing state.json
+        }
+      }
+
+      // Determine device ID: env variable > existing state > generated random hex
+      let deviceId = process.env.SPOTIFY_DEVICE_ID || existingState.device_id;
+      if (!deviceId) {
+        deviceId = crypto.randomBytes(20).toString('hex');
+      }
+
+      const statePayload = {
+        device_id: deviceId,
+        event_manager: existingState.event_manager || null,
+        credentials: {
+          username: spotifyUsername,
+          data: spotifyCredsData
+        },
+        last_volume: existingState.last_volume !== undefined ? existingState.last_volume : 65535
+      };
+
+      fs.writeFileSync(statePath, JSON.stringify(statePayload), 'utf8');
+      console.log(`[player] Dynamically generated state.json for user: ${spotifyUsername}`);
+    } catch (err) {
+      console.error('[player] Failed to write dynamic state.json:', err.message);
     }
   }
 
