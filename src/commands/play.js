@@ -1,14 +1,14 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { joinChannel } from '../player.js';
-import { loadTrack, play, urlToUri, searchTrack } from '../librespot.js';
+import { loadTrack, play, urlToUri } from '../librespot.js';
 
 export default {
   data: new SlashCommandBuilder()
     .setName('play')
     .setDescription('Play a Spotify track/playlist/album, or resume')
     .addStringOption(o =>
-      o.setName('query')
-       .setDescription('Spotify link, URI, or song name')
+      o.setName('uri')
+       .setDescription('Spotify link or URI (e.g. https://open.spotify.com/track/...)')
        .setRequired(false)
     ),
 
@@ -26,29 +26,18 @@ export default {
       return interaction.editReply(`❌ ${err.message}`);
     }
 
-    const input = interaction.options.getString('query');
+    const input = interaction.options.getString('uri');
 
     if (input) {
-      let uri = urlToUri(input);
-      let title = input;
-
+      const uri = urlToUri(input);
       if (!uri) {
-        // If not a direct URI/link, search for the song
-        await interaction.editReply(`🔍 Searching for \`${input}\` on Spotify...`);
-        const searchResult = await searchTrack(input);
-        if (!searchResult) {
-          return interaction.editReply(`❌ No tracks found for \`${input}\`.`);
-        }
-        uri = searchResult.uri;
-        title = `${searchResult.name} — ${searchResult.artist}`;
+        return interaction.editReply('❌ Invalid Spotify link or URI. Paste a Spotify share URL.');
       }
-
       await loadTrack(uri);
-      await interaction.editReply(`▶ Playing **${title}** (\`${uri}\`)`);
+      await interaction.editReply(`▶ Loading \`${uri}\`...`);
     } else {
       await play();
       await interaction.editReply('▶ Resumed.');
     }
   },
 };
-

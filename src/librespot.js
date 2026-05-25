@@ -125,22 +125,3 @@ export function urlToUri(input) {
   }
   return null;
 }
-
-/**
- * Search for a track on Spotify using go-librespot's Web API proxy
- * @param {string} query - Track name, artist, etc.
- * @returns {Promise<{uri: string, name: string, artist: string}|null>}
- */
-export async function searchTrack(query) {
-  const result = await apiFetch(`/web-api/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`);
-  if (result && result.tracks && result.tracks.items && result.tracks.items.length > 0) {
-    const track = result.tracks.items[0];
-    return {
-      uri: track.uri,
-      name: track.name,
-      artist: track.artists?.map(a => a.name).join(', ') || 'Unknown Artist'
-    };
-  }
-  return null;
-}
-
