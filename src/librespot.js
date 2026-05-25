@@ -125,3 +125,17 @@ export function urlToUri(input) {
   }
   return null;
 }
+
+/**
+ * Search for a track on Spotify using the Web API proxy.
+ * @param {string} query - search terms
+ * @returns {Promise<object|null>} the track object or null if not found
+ */
+export async function searchTrack(query) {
+  const data = await apiFetch(`/web-api/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`);
+  if (data && data.tracks && data.tracks.items && data.tracks.items.length > 0) {
+    return data.tracks.items[0];
+  }
+  return null;
+}
+
