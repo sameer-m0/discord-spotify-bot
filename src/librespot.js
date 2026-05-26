@@ -7,9 +7,27 @@ import WebSocket from 'ws';
 
 const BASE = process.env.LIBRESPOT_API || 'http://localhost:3678';
 
-async function apiFetch(path, options = {}) {
+async function apiFetch(path, options = {}, retryCount = 0) {
   try {
     const res = await fetch(`${BASE}${path}`, options);
+    
+    if (res.status === 429 && retryCount < 3) {
+      const retryAfterHeader = res.headers.get('retry-after');
+      let delayMs = 2000; // default backoff: 2 seconds
+      if (retryAfterHeader) {
+        const seconds = parseInt(retryAfterHeader, 10);
+        if (!isNaN(seconds)) {
+          delayMs = seconds * 1000;
+        }
+      }
+      // Add standard 500ms safety buffer
+      delayMs += 500;
+      
+      console.warn(`[librespot] Got 429 Rate Limit on ${path}. Retrying in ${delayMs}ms (Attempt ${retryCount + 1}/3)...`);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+      return apiFetch(path, options, retryCount + 1);
+    }
+
     if (!res.ok) throw new Error(`go-librespot API error: ${res.status} on ${path}`);
     const text = await res.text();
     return text ? JSON.parse(text) : null;
